@@ -90,16 +90,8 @@ export const deleteRecord = async (request: FastifyRequest<{ Params: ParamsType 
  * Update an item
  */
 export const updateRecord = async (request: FastifyRequest<{ Params: ParamsType; Body: BodyType }>, reply: FastifyReply) => {
-    const id = request.params.id;
-    const artist = request.body?.artist;
-    const title = request.body?.title;
-    const country = request.body?.country;
-    const released = request.body?.released;
-    const genre = request.body?.genre;
-    const style = request.body?.style;
-    const format = request.body?.format;
-    const label = request.body?.label;
-    const price = request.body?.price;
+    const { id } = request.params;
+    const { artist, title, country, released, genre, style, format, label, price } = request.body;
 
     const record = prisma.record.findUnique({
         where: { id }

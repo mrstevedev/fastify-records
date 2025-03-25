@@ -5,7 +5,7 @@ import { CookieName, ResponseMessage } from "../constants";
 import { fastify } from "../app";
 
 /**
- * Register
+ * Login
  */
 
 export const login = async (request: FastifyRequest<{ Body: BodyUserType }>, reply: FastifyReply) => {

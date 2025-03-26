@@ -1,8 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { BodyType, ParamsType } from "../types";
+import { BodyType, ParamsType, UploadType } from "../types";
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "../client/prisma";
 import { ResponseMessage } from "../constants";
+import { s3 } from "../client/aws";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const getRecords = async (_request: FastifyRequest, reply: FastifyReply) => {
     const records = await prisma.record.findMany();
@@ -28,40 +31,52 @@ export const getRecord = async (request: FastifyRequest<{ Params: ParamsType }>,
 };
 
 /**
+ * Upload a file
+ * @param request
+ * @param reply
+ */
+
+async function UploadFileToS3(data: any, params: any) {
+    const command = new PutObjectCommand(params);
+    const presignedURL = await getSignedUrl(s3, command, { expiresIn: 360 });
+
+    await fetch(presignedURL, { method: "PUT", body: data.file?._buf });
+}
+
+/**
  * Create a new item
  */
-export const addRecord = async (request: FastifyRequest<{ Body: BodyType }>, reply: FastifyReply) => {
-    const file = request.body.image;
+export const addRecord = async (request: FastifyRequest<{ Body: UploadType }>, reply: FastifyReply) => {
+    const data = request.body;
 
-    console.log("file", file);
+    const artist = data.artist.value;
+    const title = data.title.value;
+    const country = data.country.value;
+    const released = data.released.value;
+    const genre = data.genre.value;
+    const style = data.style.value;
+    const format = data.format.value;
+    const label = data.label.value;
+    const price = data.price.value;
 
-    // 1. Upload the file to S3 bucket
-    // 2. Get the URL of the uploaded file
-    // 3. Save the URL to the database
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME as string,
+        Key: data.file.filename
+    };
+
+    await UploadFileToS3(data, params);
+
+    const command = new GetObjectCommand(params);
+    const signedURL = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
     const record = await prisma.record.findFirst({
-        where: {
-            artist: request.body?.artist,
-            title: request.body?.title
-        }
+        where: { artist, title }
     });
 
     if (record) return reply.status(400).send({ message: ResponseMessage.RECORD_ALREADY_EXISTS });
 
     const newItem = await prisma.record.create({
-        data: {
-            id: uuidv4(),
-            artist: request.body?.artist,
-            title: request.body?.title,
-            country: request.body?.country,
-            released: request.body?.released,
-            genre: request.body?.genre,
-            style: request.body?.style,
-            format: request.body?.format,
-            label: request.body?.label,
-            price: request.body?.price,
-            image: request.body?.image
-        }
+        data: { id: uuidv4(), artist, title, country, released, genre, style, format, label, price, image: signedURL }
     });
 
     reply.code(201).send({ record: newItem });

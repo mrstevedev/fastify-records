@@ -1,6 +1,7 @@
 import { DoneFuncWithErrOrRes, FastifyReply, FastifyRequest } from "fastify";
 import { authFunction } from "../utils/authFunction";
 import { addRecord } from "../controllers/records";
+// import { upload } from "../app";
 
 const Record = {
     type: "object",
@@ -15,9 +16,7 @@ const Record = {
         format: { type: "string" },
         label: { type: "string" },
         price: { type: "string" },
-        image: { type: "string" },
-        createdAt: { type: "string" },
-        updatedAt: { type: "string" }
+        image: { type: "string" }
     }
 };
 
@@ -47,16 +46,12 @@ export const getRecordOpts = {
 
 export const postRecordOpts = {
     schema: {
+        consumes: ["multipart/form-data"],
         body: {
             type: "object",
+            required: ["artist", "title", "country", "released", "genre", "style", "format", "label", "price", "file"],
             properties: {
-                record: {
-                    type: "object",
-                    required: ["artist", "title", "country", "released", "genre", "style", "format", "label", "price", "image"],
-                    properties: {
-                        record: Record
-                    }
-                }
+                record: Record
             }
         },
         response: {
@@ -69,9 +64,7 @@ export const postRecordOpts = {
         }
     },
     handler: addRecord,
-    preHandler: async (request: FastifyRequest, reply: FastifyReply, done: DoneFuncWithErrOrRes) => {
-        await authFunction(request, reply, done);
-    }
+    preHandler: authFunction
 };
 
 export const updateRecordOpts = {

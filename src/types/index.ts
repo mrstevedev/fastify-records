@@ -60,6 +60,7 @@ export type UploadType = {
         value: Stream;
         encoding: string;
         filename: string;
+        _buf: Buffer;
     };
 };
 

@@ -6,6 +6,7 @@ import { ResponseMessage } from "../constants";
 import { s3 } from "../client/aws";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { AWSParamsType } from "../types";
 
 export const getRecords = async (_request: FastifyRequest, reply: FastifyReply) => {
     const records = await prisma.record.findMany();
@@ -36,7 +37,7 @@ export const getRecord = async (request: FastifyRequest<{ Params: ParamsType }>,
  * @param reply
  */
 
-async function UploadFileToS3(data: any, params: any) {
+async function UploadFileToS3(data: UploadType, params: AWSParamsType) {
     const command = new PutObjectCommand(params);
     const presignedURL = await getSignedUrl(s3, command, { expiresIn: 360 });
 

@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { CustomFastify } from "./types";
 import multipart from "@fastify/multipart";
+import fastifyHelmet from "@fastify/helmet";
 
 // Use declaration merging to add the new type to FastifyInstance
 declare module "fastify" {
@@ -20,6 +21,10 @@ export const fastify: FastifyInstance = require("fastify")({
 
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 9000;
 
+fastify.register(fastifyHelmet, {
+    global: true,
+    contentSecurityPolicy: false
+});
 fastify.register(multipart, {
     attachFieldsToBody: true
 });

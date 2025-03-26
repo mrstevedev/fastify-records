@@ -123,10 +123,3 @@ export const updateRecord = async (request: FastifyRequest<{ Params: ParamsType;
 };
 
 export const patchRecord = (request: FastifyRequest<{ Params: ParamsType }>, reply: FastifyReply) => {};
-
-/**
- * Logout
- */
-export const logout = (request: FastifyRequest, reply: FastifyReply) => {
-    reply.send({ message: "Logout" });
-};

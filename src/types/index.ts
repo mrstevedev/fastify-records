@@ -4,6 +4,11 @@ export type ParamsType = {
     id: string;
 };
 
+export type AWSParamsType = {
+    Bucket: string;
+    Key: string;
+};
+
 export type UploadType = {
     artist: {
         fieldname: string;

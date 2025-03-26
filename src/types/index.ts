@@ -1,5 +1,61 @@
+import Stream from "node:stream";
+
 export type ParamsType = {
     id: string;
+};
+
+export type UploadType = {
+    artist: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    title: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    country: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    released: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    genre: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    style: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    format: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    label: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    price: {
+        fieldname: string;
+        value: string;
+        encoding: string;
+    };
+    file: {
+        fieldname: string;
+        value: Stream;
+        encoding: string;
+        filename: string;
+    };
 };
 
 export type BodyType = {
@@ -14,6 +70,10 @@ export type BodyType = {
     label: string;
     price: string;
     image: string;
+    file: {
+        filename: string;
+        file: Stream;
+    };
 };
 
 export type BodyUserType = {

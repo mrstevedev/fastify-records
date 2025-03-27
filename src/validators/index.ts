@@ -16,6 +16,7 @@ const Record = {
         format: { type: "string" },
         label: { type: "string" },
         price: { type: "string" },
+        tracklist: { type: "string" },
         image: { type: "string" }
     }
 };
@@ -131,3 +132,5 @@ export const registerOpts = {
         response: {}
     }
 };
+
+export const getReleaseOpts = {};

@@ -48,7 +48,8 @@ export enum ResponseMessage {
     USER_CREATED = "User Created",
     USER_NOT_FOUND = "User Not Found",
     PASSWORD_INCORRECT = "Password Incorrect",
-    RECORD_ALREADY_EXISTS = "Record Already Exists"
+    RECORD_ALREADY_EXISTS = "Record Already Exists",
+    RELEASE_NOT_FOUND = "Release Not Found"
 }
 
 export enum Role {

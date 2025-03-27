@@ -34,6 +34,7 @@ fastify.register(require("@fastify/swagger-ui"), {
 });
 fastify.register(require("./routes/auth"));
 fastify.register(require("./routes/records"));
+fastify.register(require("./routes/release"));
 fastify.register(require("fastify-bcrypt"), {
     saltWorkFactor: 12
 });
